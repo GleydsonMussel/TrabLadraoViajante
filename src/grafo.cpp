@@ -32,27 +32,119 @@ Grafo::Grafo(std::string filename){
     std::vector<int> pesos;
 
     int contLinha = 0;
+    bool parteDosItens = false;
 
     while(std::getline(arquivo, linha)){
+      
+      if(linha == "ITEMS SECTION	(INDEX, PROFIT, WEIGHT, ASSIGNED NODE NUMBER): ")
+        parteDosItens = true;
 
+      // Somente pegando dados do cabeçalho
       if(contLinha<10){
         
-        std::istringstream linha_manipulavel;
+        std::istringstream linha_manipulavel(linha);
         std::string elemento;
-        int cont_colunas = 0;
+        int cont_colunas = 0, colunaAlvo;
+        switch (contLinha){
+          
+          case 0:
+            contLinha++;
+            continue;
+          break;
+
+          case 1:
+            contLinha++;
+            continue;
+          break;
+
+          case 2:
+            colunaAlvo = 1;
+          break;
+
+          case 3:
+            colunaAlvo = 3;
+          break;
+
+          case 4:
+            colunaAlvo = 3;
+          break;
+
+          case 5:
+            colunaAlvo = 2;
+          break;
+
+          case 6:
+            colunaAlvo = 2;
+          break;
+
+          case 7:
+            colunaAlvo = 2;
+          break;
+
+          case 8:
+            contLinha++;
+            continue;
+          break;
+
+          case 9:
+            contLinha++;
+            continue;
+          break;
+
+          default:
+          break;
+        }
         
         // Percorro os espaçoes em branco
         while(linha_manipulavel >> elemento){
-          if (cont_colunas==1)
+          if (cont_colunas==colunaAlvo)
             conteudos_cabecalhos.push_back(elemento);
-          
           cont_colunas++;
+        }
+
+        contLinha++;
+
+      }
+      else{
+
+        if(!parteDosItens){
+
+            std::istringstream linha_manipulavel(linha);
+            std::string elemento;
+
+            int contCol = 0;
+
+            int id;
+            float coord_x;
+            float coord_y;
+
+            linha_manipulavel >> id >> coord_x >> coord_y;
+
+            Vertice novoNo;
+            novoNo.id = id;
+            novoNo.coord = {coord_x, coord_y};
+            this->adicionarNo(id, novoNo);
+
         }
       }
     }
 
+    // Salvando dados cabecalho
+    this->dimensao = std::stof(conteudos_cabecalhos[0]);
+    this->numero_itens = std::stof(conteudos_cabecalhos[1]);
+    this->capacidade_mochila = std::stof(conteudos_cabecalhos[2]);
+    this->v_min = std::stof(conteudos_cabecalhos[3]);
+    this->v_max = std::stof(conteudos_cabecalhos[4]);
+    this->custo_aluguel = std::stof(conteudos_cabecalhos[5]);
+    
+    /*
+    Testando pegar os conteúdos do cabecalho
     for(auto& elemento_vetor:conteudos_cabecalhos)
       std::cout<<elemento_vetor<<"\n";
+    */
+
+    std::cout<<"\n";
+
     // TESTES
     /*
       // Printando hotel
@@ -178,25 +270,5 @@ bool Grafo::validarSolucao(std::vector<int> solucao){
 }
 
 int Grafo::calculaCusto(std::vector<int> solucao){
-  
-  int valor_solucao = 0;
-
-  for(auto& valor : solucao){
-    valor_solucao += this->nos[valor].peso;
-  }
-
-  return valor_solucao;
-
-}
-
-int Grafo::quantidadeNos(){
-  return nos.size();
-
-}
-
-float Grafo::calculaCustoTempo(std::vector<int> solucao){
-
-
-  return 0.0;
-
+  return 0;
 }

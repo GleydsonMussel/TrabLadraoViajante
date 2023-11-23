@@ -34,10 +34,11 @@ class Grafo final {
     std::vector<std::vector<int>> floyd_interno();
     int capacidade_mochila;
     int numero_itens;
-    float min_velocidade;
-    float max_velocidade;
+    float v_min;
+    float v_max;
     float custo_aluguel;
     int ordem;
+    int dimensao;
 
 };
 

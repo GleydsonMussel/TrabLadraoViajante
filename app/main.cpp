@@ -11,13 +11,15 @@ int main(int argc, const char* argv[]){
 
     std::vector<std::string> instancias;
 
-    std::string directory_path = "../instances/"; // Substitua pelo caminho do seu diretório
+    std::string directory_path = "../instances/"; 
     
     std::vector<int> custosIniciais, custosFinais;
 
     for (const auto& entry : fs::directory_iterator(directory_path)) {
         std::cout << entry.path().filename().string() << std::endl;
+        Grafo grafo("../instances/"+entry.path().filename().string());
     }
+
     return 0;
 
 }
