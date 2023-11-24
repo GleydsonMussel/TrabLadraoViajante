@@ -12,25 +12,34 @@
 class Grafo final {
 
   public:
+    // Construtor
     Grafo(std::string filename);
-    void adicionarNo(int id, Vertice vertice);                            // b
-    void adicionarAresta(int origem, int destino, float peso = 1.0);      // b
-    void adicionaItem(int cidade, Item item);
-    bool removerNo(int id);
-    void removerAresta(int origem, int destino);                          // b
-    bool verificarNoRemovidoOuArestaApontaPara(int id);
-    Vertice& no(int id);                                      // m
-    std::vector<int> geraSolucao(float alpha, int instancia); 
-    void printa_nos();
+    // Adicionadores
+    void adicionarNo(int id, Vertice vertice){
+      nos.emplace(id, vertice);
+    }                           
+    void adicionarAresta(int origem, int destino, float peso = 1.0);      
+    
+    void adicionaItem(int cidade, Item item){
+      this->nos[cidade].itens_to_roubar.push_back(item);
+    }
+
+    void cadastraComoVisitado_No(int id){
+          this->nos[id].visitado = true;
+          this->ordem = this->ordem - 1;
+    }
+    // Printadores    
+    void printa_nos(){
+        for(auto& [id, no] : this->nos)
+        std::cout<<id<<"\n";
+    }
     void printa_arestas();   
-    void printa_itens();
+    void printa_itens();   
+    // Otimizadores                                   
+    std::pair<std::vector<int>, std::vector<int>> ACO(int n_formigas, int n_geracoes, float taxa_evaporacao); 
     bool validarSolucao(std::vector<int> solucao);
     int calculaCusto(std::vector<int> solucao);
-    int quantidadeNos();
     float calculaCustoTempo(std::vector<int> solucao);
-    std::unordered_map<int, Vertice> copiarNos() {
-      return nos;
-    }
 
   private:
     std::unordered_map<int, Vertice> nos{};

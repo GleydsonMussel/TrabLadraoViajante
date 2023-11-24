@@ -149,9 +149,16 @@ Grafo::Grafo(std::string filename){
       }
       
     }
-
-    //this->printa_nos();
-    this->printa_itens();
+    // Salvando as arestas do grafo
+    for(auto noExterno : this->nos){
+        for(auto noInterno : this->nos){
+          float pesoAresta = std::sqrt( std::pow((noExterno.second.coord.first - noInterno.second.coord.first), 2) + std::pow((noExterno.second.coord.second - noInterno.second.coord.second), 2) ); 
+          this->adicionarAresta(noExterno.first, noInterno.first, pesoAresta);
+        }   
+    }
+    
+    // Salvando a ordem do grafo
+    this->ordem = this->nos.size();
 
     // Salvando dados cabecalho
     this->dimensao = std::stof(conteudos_cabecalhos[0]);
@@ -160,48 +167,23 @@ Grafo::Grafo(std::string filename){
     this->v_min = std::stof(conteudos_cabecalhos[3]);
     this->v_max = std::stof(conteudos_cabecalhos[4]);
     this->custo_aluguel = std::stof(conteudos_cabecalhos[5]);
-    
+
+    //this->printa_nos();
+    this->printa_itens();
+
     /*
     Testando pegar os conteúdos do cabecalho
     for(auto& elemento_vetor:conteudos_cabecalhos)
       std::cout<<elemento_vetor<<"\n";
-    */
-
     std::cout<<"\n";
-
-    // TESTES
-    /*
-      // Printando hotel
-      for(int i=0; i<this->nos.size(); i++){
-
-        std::cout << "\nNo: "<<this->nos[i].id<< " Custo para o hotel mais proximo: "<<this->nos[i].cost_nearest_hotel;
-        // std::cout<<"\nCaminho para o hotel mais proximo:\n";
-
-        //for(auto& elemento_caminho : elemento.second.path_nearest_hotel)
-          //std::cout<<elemento_caminho << "->";
-
-      }
-      
-      for(auto& elemento : this->ids_hoteis)
-        std::cout<<"\nId hotel: "<<elemento;
-
-      //std::cout<<"\nNumero de nos: "<< this->ordem;
-      ids_hoteis
-      //this->printa_arestas();
     */
 
    return;
 
 }
-void Grafo::printa_nos(){
-  for(auto& [id, no] : this->nos)
-    std::cout<<id<<"\n";
-}
-void Grafo::adicionarNo(int id, Vertice vertice){
-  nos.emplace(id, vertice);
-}
 
 void Grafo::printa_arestas() {
+
     for (const auto& pair : nos) {
         const Vertice& vertice = pair.second;
         std::cout << "\nArestas do Vértice " << vertice.id << ":\n";
@@ -211,18 +193,17 @@ void Grafo::printa_arestas() {
         
     }
 }
+void Grafo::adicionarAresta(int origem, int destino, float peso){
 
-void Grafo::adicionarAresta(int origem, int destino, float peso)
-{
   auto noOrigem = nos.find(origem);
   auto noDestino = nos.find(destino);
-  if (noOrigem == nos.end() || noDestino == nos.end()) {
+  if (noOrigem == nos.end() || noDestino == nos.end())
     return;
-  }
-  Aresta aresta{ destino, peso};
+  Aresta aresta{destino, peso};
   noOrigem->second.arestas.push_front(aresta);
   
 }
+
 void Grafo::printa_itens(){
   for(auto& [id, no] : this->nos){
     std::cout<<"Cidade: "<<id<<" apresenta os itens -> { ";
@@ -232,74 +213,14 @@ void Grafo::printa_itens(){
   }
 
 }
-void Grafo::adicionaItem(int cidade, Item item){
-  this->nos[cidade].itens_to_roubar.push_back(item);
-}
 
-bool Grafo::removerNo(int id) {
-
-      // Crie uma função lambda que verifica se a aresta deve ser removida
-      auto shouldRemoveAresta = [id](const Aresta& aresta) { return aresta.id == id; };
-
-      // Itera sobre todos os nós do grafo
-      for (auto& [_, no] : nos) {
-          // Use a função std::remove_if seguida de no.arestas.erase para remover as arestas que atendem à condição
-          no.arestas.remove_if(shouldRemoveAresta);
-      }
-  
-
-    nos.erase(id);
-
-    this->ordem = this->ordem - 1;
-
-    return true;
-}
-
-void Grafo::removerAresta(int origem, int destino){
-  auto noOrigem = nos.find(origem);
-  auto noDestino = nos.find(destino);
-  if (noOrigem == nos.end() || noDestino == nos.end()) {
-    return;
-  }
-
-  auto& arestas = noOrigem->second.arestas;
-  auto numRemovidos = std::count_if(arestas.begin(), arestas.end(), [destino](const Aresta& aresta) { return aresta.id == destino; });
-
-  if (numRemovidos == 0)
-    return;
-  
-  noDestino->second.arestas.remove_if([origem](const Aresta& aresta) { return aresta.id == origem; });
-  
-}
-
-  Vertice& Grafo::no(int id){
-  return nos.at(id);
-}
-
-std::vector<int> Grafo::geraSolucao(float alpha, int instancia){
+std::pair<std::vector<int>, std::vector<int>> Grafo::ACO(int n_formigas, int n_geracoes, float taxa_evaporacao){
     
     // Inicializações
-    std::vector<int> solucao;
+    std::pair<std::vector<int>, std::vector<int>> solucao;
 
     return solucao;
 
-}
-
-bool Grafo::verificarNoRemovidoOuArestaApontaPara(int id) {
-    // Verifica se o nó com o ID fornecido ainda existe no grafo
-
-    // Verifica se alguma aresta aponta para o nó com o ID fornecido
-    for (auto& par : nos) {
-        Vertice& vertice = par.second;
-        for (const Aresta& aresta : vertice.arestas) {
-            if (aresta.id == id) {
-                return true; // Existe uma aresta que aponta para o nó
-            }
-        }
-    }
-
-    // Se o nó não foi encontrado e nenhuma aresta aponta para ele, ele não está mais no grafo
-    return false;
 }
 
 bool Grafo::validarSolucao(std::vector<int> solucao){
