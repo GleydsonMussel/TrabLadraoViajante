@@ -15,12 +15,15 @@ class Grafo final {
     Grafo(std::string filename);
     void adicionarNo(int id, Vertice vertice);                            // b
     void adicionarAresta(int origem, int destino, float peso = 1.0);      // b
+    void adicionaItem(int cidade, Item item);
     bool removerNo(int id);
     void removerAresta(int origem, int destino);                          // b
     bool verificarNoRemovidoOuArestaApontaPara(int id);
     Vertice& no(int id);                                      // m
     std::vector<int> geraSolucao(float alpha, int instancia); 
+    void printa_nos();
     void printa_arestas();   
+    void printa_itens();
     bool validarSolucao(std::vector<int> solucao);
     int calculaCusto(std::vector<int> solucao);
     int quantidadeNos();

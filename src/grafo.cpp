@@ -36,8 +36,11 @@ Grafo::Grafo(std::string filename){
 
     while(std::getline(arquivo, linha)){
       
-      if(linha == "ITEMS SECTION	(INDEX, PROFIT, WEIGHT, ASSIGNED NODE NUMBER): ")
+      if(linha == "ITEMS SECTION	(INDEX, PROFIT, WEIGHT, ASSIGNED NODE NUMBER): "){
         parteDosItens = true;
+        continue;
+      }
+        
 
       // Somente pegando dados do cabeçalho
       if(contLinha<10){
@@ -110,7 +113,6 @@ Grafo::Grafo(std::string filename){
         if(!parteDosItens){
 
             std::istringstream linha_manipulavel(linha);
-            std::string elemento;
 
             int contCol = 0;
 
@@ -126,8 +128,30 @@ Grafo::Grafo(std::string filename){
             this->adicionarNo(id, novoNo);
 
         }
+        else{
+
+          int id_item;
+          int lucro;
+          int peso;
+          int cidade_onde_estou;
+
+          std::istringstream linha_manipulavel(linha);
+          linha_manipulavel >> id_item >> lucro >> peso >> cidade_onde_estou;
+          
+          Item item;
+          item.id = id_item;
+          item.lucro = lucro;
+          item.peso = peso;
+          item.cidade_onde_estou = cidade_onde_estou;
+          this->adicionaItem(cidade_onde_estou, item);
+
+        }
       }
+      
     }
+
+    //this->printa_nos();
+    this->printa_itens();
 
     // Salvando dados cabecalho
     this->dimensao = std::stof(conteudos_cabecalhos[0]);
@@ -169,9 +193,11 @@ Grafo::Grafo(std::string filename){
    return;
 
 }
-
-void Grafo::adicionarNo(int id, Vertice vertice)
-{
+void Grafo::printa_nos(){
+  for(auto& [id, no] : this->nos)
+    std::cout<<id<<"\n";
+}
+void Grafo::adicionarNo(int id, Vertice vertice){
   nos.emplace(id, vertice);
 }
 
@@ -180,12 +206,11 @@ void Grafo::printa_arestas() {
         const Vertice& vertice = pair.second;
         std::cout << "\nArestas do Vértice " << vertice.id << ":\n";
         
-        for (const Aresta& aresta : vertice.arestas) {
+        for (const Aresta& aresta : vertice.arestas) 
             std::cout << "  Destino: " << aresta.id << ", Peso: " << aresta.peso << "\n";
-        }
+        
     }
 }
-
 
 void Grafo::adicionarAresta(int origem, int destino, float peso)
 {
@@ -197,6 +222,18 @@ void Grafo::adicionarAresta(int origem, int destino, float peso)
   Aresta aresta{ destino, peso};
   noOrigem->second.arestas.push_front(aresta);
   
+}
+void Grafo::printa_itens(){
+  for(auto& [id, no] : this->nos){
+    std::cout<<"Cidade: "<<id<<" apresenta os itens -> { ";
+      for (auto& elemento : no.itens_to_roubar)
+        std::cout<<elemento.id<<" ";
+    std::cout<<"}\n";      
+  }
+
+}
+void Grafo::adicionaItem(int cidade, Item item){
+  this->nos[cidade].itens_to_roubar.push_back(item);
 }
 
 bool Grafo::removerNo(int id) {

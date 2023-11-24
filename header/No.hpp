@@ -10,17 +10,18 @@ struct Aresta {
 };
 
 struct Item{
-  int id;
+  int id = -1;
   int lucro;
   int peso; 
-  int onde_esta;
+  int cidade_onde_estou;
 };
 
 struct Vertice{
-    int id;
+    int id = -1;
     bool visitado = false;
     std::forward_list<Aresta> arestas{};
     std::pair<float,float> coord;
+    std::vector<Item> itens_to_roubar;
 };
 
 
