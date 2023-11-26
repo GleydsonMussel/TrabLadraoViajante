@@ -20,6 +20,7 @@
 #include <string>
 #include <sstream>
 #include <set>
+#include <unordered_map>
 
 Grafo::Grafo(std::string filename){
 
@@ -195,10 +196,24 @@ void Grafo::printa_itens(){
 
 }
 
+double Grafo::calcDistancia_Total(std::vector<int> caminho){
+
+  double custo = 0;
+    for(auto i = 0; i < caminho.size()-1; ++i)
+      custo += this->matrix_distancias[i][i+1];
+  
+  custo += this->matrix_distancias[caminho[caminho.size()-1]][caminho[0]];
+
+  return custo;
+
+}
+
 std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, float taxaEvaporacao, float alpha, float beta){
     
     const int numVertices = this->ordem;
-
+    int id_formiga = 0;
+    std::unordered_map<int, std::vector<int>> registro_geral_formigas;
+    double custo_primeiro_caminho, custo_caminho_final;
     // Matriz de feromônios entre os vértices
     std::vector<std::vector<float>> feromonios(numVertices, std::vector<float>(numVertices, 1.0));
 
@@ -246,20 +261,13 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, float taxaEvapora
                 this->nos[posicaoAtual].visitado = true;
             }
 
-            // Evaporação de feromônios
-            for (int i = 0; i < numVertices; ++i)
-                for (int j = 0; j < numVertices; ++j)
-                    feromonios[i][j] *= (1.0 - taxaEvaporacao);
-
-            // Atualização dos feromônios no caminho percorrido pela formiga
-            float feromonioDepositado = 1.0 / this->matrix_distancias[numVertices - 1][caminho[0]];
-            for (size_t i = 0; i < caminho.size() - 1; ++i) {
-                feromonios[caminho[i]][caminho[i + 1]] += feromonioDepositado;
-                feromonios[caminho[i + 1]][caminho[i]] += feromonioDepositado;
-            }
-
             // Verificação se o caminho atual é o melhor encontrado
             float distanciaTotal = 0.0f;
+
+            // Salvo o custo do primeiro caminho
+            if(iteracao==0 && k==0)
+              custo_primeiro_caminho = this->calcDistancia_Total(caminho);
+
             for (size_t i = 0; i < caminho.size() - 1; ++i) 
                 distanciaTotal += this->matrix_distancias[caminho[i]][caminho[i+1]];
 
@@ -271,8 +279,30 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, float taxaEvapora
             // Resetar os vértices visitados para a próxima iteração
             for (int i = 0; i < numVertices; ++i) 
                 this->nos[i].visitado = false;
+
+            // Salvo o caminho feito pela formiga
+            registro_geral_formigas[id_formiga] = caminho;
+            ++id_formiga;
+        }
+
+        // Evaporação de feromônios
+        for (int i = 0; i < numVertices; ++i)
+          for (int j = 0; j < numVertices; ++j)
+            feromonios[i][j] *= (1.0 - taxaEvaporacao);
+
+        // Atualização dos feromônios no caminho percorrido pela formiga
+        for(auto g=iteracao*numFormigas; g < registro_geral_formigas.size(); ++g){
+          float feromonioDepositado = 1.0 / this->matrix_distancias[numVertices - 1][registro_geral_formigas[g][0]];
+          for (size_t i = 0; i < registro_geral_formigas[g].size() - 1; ++i){
+            feromonios[registro_geral_formigas[g][i]][registro_geral_formigas[g][i + 1]] += feromonioDepositado;
+            feromonios[registro_geral_formigas[g][i + 1]][registro_geral_formigas[g][i]] += feromonioDepositado;
+          }
         }
     }
+    
+    double custo_melhor_caminho = this->calcDistancia_Total(melhorCaminho);
+    std::cout<<"Distancia primeiro caminho: "<<custo_primeiro_caminho<<"\n";
+    std::cout<<"Distancia melhor caminho: "<<custo_melhor_caminho<<"\n";
 
     return melhorCaminho;
 

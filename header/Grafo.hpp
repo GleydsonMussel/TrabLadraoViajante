@@ -40,6 +40,7 @@ class Grafo final {
     bool validarSolucao(std::vector<int> solucao);
     int calculaCusto(std::vector<int> solucao);
     float calculaCustoTempo(std::vector<int> solucao);
+    double calcDistancia_Total(std::vector<int> caminho);
 
   private:
     std::unordered_map<int, Vertice> nos{};
