@@ -2,6 +2,7 @@
 #define TRAB_INTELIGENCIA_COMPUTACIOANAL_HPP
 
 #include "No.hpp"
+#include <iostream>
 #include <array>
 #include <cstddef>
 #include <unordered_map>
@@ -14,11 +15,11 @@ class Grafo final {
   public:
     // Construtor
     Grafo(std::string filename);
+
     // Adicionadores
     void adicionarNo(int id, Vertice vertice){
       nos.emplace(id, vertice);
-    }                           
-    void adicionarAresta(int origem, int destino, float peso = 1.0);      
+    }                              
     
     void adicionaItem(int cidade, Item item){
       this->nos[cidade].itens_to_roubar.push_back(item);
@@ -32,17 +33,17 @@ class Grafo final {
     void printa_nos(){
         for(auto& [id, no] : this->nos)
         std::cout<<id<<"\n";
-    }
-    void printa_arestas();   
+    }  
     void printa_itens();   
     // Otimizadores                                   
-    std::pair<std::vector<int>, std::vector<int>> ACO(int n_formigas, int n_geracoes, float taxa_evaporacao); 
+    std::vector<int> ACO(int numIteracoes, int numFormigas, float taxaEvaporacao, float alpha, float beta);
     bool validarSolucao(std::vector<int> solucao);
     int calculaCusto(std::vector<int> solucao);
     float calculaCustoTempo(std::vector<int> solucao);
 
   private:
     std::unordered_map<int, Vertice> nos{};
+    std::unordered_map<int, std::unordered_map<int, double>> matrix_distancias;
     std::vector<std::vector<int>> floyd_interno();
     int capacidade_mochila;
     int numero_itens;
@@ -51,7 +52,7 @@ class Grafo final {
     float custo_aluguel;
     int ordem;
     int dimensao;
-
+    
 };
 
 #endif

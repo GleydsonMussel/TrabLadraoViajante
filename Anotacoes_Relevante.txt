@@ -1,0 +1,2 @@
+Estretégia para o ACO:
+            Offiline para a atualização dos feromômios

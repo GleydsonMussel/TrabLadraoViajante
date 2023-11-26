@@ -152,13 +152,16 @@ Grafo::Grafo(std::string filename){
     // Salvando as arestas do grafo
     for(auto noExterno : this->nos){
         for(auto noInterno : this->nos){
-          float pesoAresta = std::sqrt( std::pow((noExterno.second.coord.first - noInterno.second.coord.first), 2) + std::pow((noExterno.second.coord.second - noInterno.second.coord.second), 2) ); 
-          this->adicionarAresta(noExterno.first, noInterno.first, pesoAresta);
+          double pesoAresta = std::sqrt( std::pow((noExterno.second.coord.first - noInterno.second.coord.first), 2) + std::pow((noExterno.second.coord.second - noInterno.second.coord.second), 2) ); 
+          this->matrix_distancias[noExterno.second.id][noInterno.second.id] = pesoAresta;
         }   
     }
     
     // Salvando a ordem do grafo
     this->ordem = this->nos.size();
+
+    std::cout<<"Numero de nos do grafo: "<<this->ordem<<"\n";
+    std::cout<<"Ordem da matrix de distancias: "<<this->matrix_distancias.size()<<"x"<<this->matrix_distancias[1].size()<<"\n";
 
     // Salvando dados cabecalho
     this->dimensao = std::stof(conteudos_cabecalhos[0]);
@@ -182,28 +185,6 @@ Grafo::Grafo(std::string filename){
 
 }
 
-void Grafo::printa_arestas() {
-
-    for (const auto& pair : nos) {
-        const Vertice& vertice = pair.second;
-        std::cout << "\nArestas do Vértice " << vertice.id << ":\n";
-        
-        for (const Aresta& aresta : vertice.arestas) 
-            std::cout << "  Destino: " << aresta.id << ", Peso: " << aresta.peso << "\n";
-        
-    }
-}
-void Grafo::adicionarAresta(int origem, int destino, float peso){
-
-  auto noOrigem = nos.find(origem);
-  auto noDestino = nos.find(destino);
-  if (noOrigem == nos.end() || noDestino == nos.end())
-    return;
-  Aresta aresta{destino, peso};
-  noOrigem->second.arestas.push_front(aresta);
-  
-}
-
 void Grafo::printa_itens(){
   for(auto& [id, no] : this->nos){
     std::cout<<"Cidade: "<<id<<" apresenta os itens -> { ";
@@ -214,12 +195,86 @@ void Grafo::printa_itens(){
 
 }
 
-std::pair<std::vector<int>, std::vector<int>> Grafo::ACO(int n_formigas, int n_geracoes, float taxa_evaporacao){
+std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, float taxaEvaporacao, float alpha, float beta){
     
-    // Inicializações
-    std::pair<std::vector<int>, std::vector<int>> solucao;
+    const int numVertices = this->ordem;
 
-    return solucao;
+    // Matriz de feromônios entre os vértices
+    std::vector<std::vector<float>> feromonios(numVertices, std::vector<float>(numVertices, 1.0));
+
+    std::vector<int> melhorCaminho;
+    float melhorDistancia = std::numeric_limits<float>::max();
+
+    // Loop principal do ACO
+    for (int iteracao = 0; iteracao < numIteracoes; ++iteracao){
+
+        for (int k = 0; k < numFormigas; ++k) {
+            // Inicialização de uma formiga em um vértice aleatório
+            int posicaoAtual = std::rand() % numVertices;
+            std::vector<int> caminho;
+            caminho.push_back(posicaoAtual);
+
+            // Construção do caminho da formiga
+            for (int i = 0; i < numVertices - 1; ++i) {
+                std::vector<float> probabilidades;
+                float somatorio = 0.0f;
+
+                // Cálculo das probabilidades para os vértices vizinhos não visitados
+                for (int j = 0; j < numVertices; ++j) {
+                    if (j != posicaoAtual && !this->nos[j].visitado) {
+                        float probabilidade = std::pow(feromonios[posicaoAtual][j], alpha) * std::pow(1.0 / this->matrix_distancias[posicaoAtual][j], beta);
+                        probabilidades.push_back(probabilidade);
+                        somatorio += probabilidade;
+                    } else {
+                        probabilidades.push_back(0.0f);
+                    }
+                }
+
+                // Escolha do próximo vértice baseado nas probabilidades
+                float probabilidadeTotal = 0.0f;
+                float escolhaAleatoria = static_cast<float>(std::rand()) / RAND_MAX;
+                for (size_t j = 0; j < probabilidades.size(); ++j) {
+                    probabilidades[j] /= somatorio;
+                    probabilidadeTotal += probabilidades[j];
+                    if (escolhaAleatoria <= probabilidadeTotal) {
+                        posicaoAtual = j;
+                        break;
+                    }
+                }
+
+                caminho.push_back(posicaoAtual);
+                this->nos[posicaoAtual].visitado = true;
+            }
+
+            // Evaporação de feromônios
+            for (int i = 0; i < numVertices; ++i)
+                for (int j = 0; j < numVertices; ++j)
+                    feromonios[i][j] *= (1.0 - taxaEvaporacao);
+
+            // Atualização dos feromônios no caminho percorrido pela formiga
+            float feromonioDepositado = 1.0 / this->matrix_distancias[numVertices - 1][caminho[0]];
+            for (size_t i = 0; i < caminho.size() - 1; ++i) {
+                feromonios[caminho[i]][caminho[i + 1]] += feromonioDepositado;
+                feromonios[caminho[i + 1]][caminho[i]] += feromonioDepositado;
+            }
+
+            // Verificação se o caminho atual é o melhor encontrado
+            float distanciaTotal = 0.0f;
+            for (size_t i = 0; i < caminho.size() - 1; ++i) 
+                distanciaTotal += this->matrix_distancias[caminho[i]][caminho[i+1]];
+
+            if (distanciaTotal < melhorDistancia) {
+                melhorDistancia = distanciaTotal;
+                melhorCaminho = caminho;
+            }
+
+            // Resetar os vértices visitados para a próxima iteração
+            for (int i = 0; i < numVertices; ++i) 
+                this->nos[i].visitado = false;
+        }
+    }
+
+    return melhorCaminho;
 
 }
 
