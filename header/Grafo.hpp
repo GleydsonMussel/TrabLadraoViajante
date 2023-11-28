@@ -18,10 +18,11 @@ class Grafo final {
 
     // Adicionadores
     void adicionarNo(int id, Vertice vertice){
-      nos.emplace(id, vertice);
+      this->nos.push_back(vertice);
     }                              
     
     void adicionaItem(int cidade, Item item){
+      cidade--;
       this->nos[cidade].itens_to_roubar.push_back(item);
     }
 
@@ -31,8 +32,8 @@ class Grafo final {
     }
     // Printadores    
     void printa_nos(){
-        for(auto& [id, no] : this->nos)
-        std::cout<<id<<"\n";
+        for(auto& no : this->nos)
+        std::cout<<no.id<<"\n";
     }  
     void printa_itens();   
     // Otimizadores                                   
@@ -41,10 +42,12 @@ class Grafo final {
     int calculaCusto(std::vector<int> solucao);
     float calculaCustoTempo(std::vector<int> solucao);
     double calcDistancia_Total(std::vector<int> caminho);
+    void traduz_caminho_interno_to_externo(std::vector<int> caminho_interno, std::vector<int>& caminho_traduzido);
+    void traduz_caminho_externo_to_interno(std::vector<int> caminho_externo, std::vector<int>& caminho_traduzido);
 
   private:
-    std::unordered_map<int, Vertice> nos{};
-    std::unordered_map<int, std::unordered_map<int, double>> matrix_distancias;
+    std::vector<Vertice> nos{};
+    std::vector<std::vector<double>> matrix_distancias;
     std::vector<std::vector<int>> floyd_interno();
     int capacidade_mochila;
     int numero_itens;

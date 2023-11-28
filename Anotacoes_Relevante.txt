@@ -1,2 +1,16 @@
 Estretégia para o ACO:
             Offiline para a atualização dos feromômios
+
+            Selecionar um número de rotas/formigas, dentre os conjuntos de melhores, medianas e piores e aí submeter esse conjunto à busca local
+
+            Colocar isso tudo dentro de um otimizador maior, nem que seja posto como referência para trabalhos futuros
+
+            Ideia melhor: 
+
+                Aplicar o problema da mochila para todos os indivíduos a cada geração
+            
+                Atualizar os feromônios apenas ao fim de aplicar o problema da mochila a cada indivíduo que sai da geração -> Esse gerador da mochila dentre o ACO deve ser mais leve e ingênuo
+
+                No fim, para os x% mais promissores, aplicar um otimizador mais pesado para a mochila
+
+                COMEÇAR DEIXANDO O ACO PARA AS ROTAS FUNCIONANDO
