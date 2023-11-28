@@ -46,6 +46,7 @@ class Grafo final {
     void traduz_caminho_externo_to_interno(std::vector<int> caminho_externo, std::vector<int>& caminho_traduzido);
     std::vector<int> gera_mochila(std::vector<int> rota, std::vector<int>& mochila_simples);
     void atualiza_velocidade(Item& item);
+    void gera_mochila_light(std::vector<int> caminho, std::vector<Item>&mochila);
 
   private:
     std::vector<Vertice> nos{};

@@ -282,6 +282,7 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, float taxaEvapora
                         } else {
                             j = -1;
                             escolhaAleatoria = static_cast<double>(std::rand()) / RAND_MAX;
+                            probabilidadeTotal = 0;
                         }
                     }
                     ++j;
@@ -345,7 +346,7 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, float taxaEvapora
         /*
         std::cout<<"\n";
         std::cout<<"Matriz Feromonios Depois:\n";
-        for (auto g = iteracao * numFormigas; g < registro_geral_formigas.size(); ++g) {
+        for (auto g = iteracao* numFormigas; g < registro_geral_formigas.size(); ++g) {
             for (size_t i = 0; i < registro_geral_formigas[g].size() - 1; ++i) 
                 std::cout << feromonios[registro_geral_formigas[g][i]][registro_geral_formigas[g][i + 1]]<<" ";
             std::cout<<"\n";
@@ -357,15 +358,84 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, float taxaEvapora
     std::cout << "Distancia primeiro caminho: " << custo_primeiro_caminho << "\n";
     std::cout << "Distancia melhor caminho: " << custo_melhor_caminho << "\n";
     std::vector<int> melhorCaminho_Convertido_para_exibir;
-    
-    // Corrije a impressão do caminho
+
+    std::vector<Item> mochila;
+    this->gera_mochila_light(melhorCaminho, mochila);
+    std::cout<<"Mochila do Melhor caminho: ";
+    for(auto& item_mochila : mochila)
+      std::cout << item_mochila.id << " ";
+    std::cout<<"\n";
+
+    auto peso = 0;
+
+    for(auto& item_mochila : mochila)
+      peso+=item_mochila.peso;
+    std::cout<<"Peso Mochila: "<<peso<<"\n";
+    std::cout<<"Capacidade Maxima:: "<<this->capacidade_mochila;
+
+    // Traduz a impressão do caminho
     this->traduz_caminho_interno_to_externo(melhorCaminho, melhorCaminho_Convertido_para_exibir);
 
     return melhorCaminho_Convertido_para_exibir;
 }
 
-std::vector<int> Grafo::gera_mochila(std::vector<int> rota, std::vector<int>& mochila_simples){
+void Grafo::gera_mochila_light(std::vector<int> caminho, std::vector<Item>&mochila){
+  
+  int capacidade_atual = 0;
 
+  for(int k=0; k<caminho.size()-1;++k){
+
+      auto cidade = caminho[k];
+      std::vector<double> probabilidades;
+      double somaP = 0;
+      bool ha_candidatos = false;
+      // Calcula probabilidade e checa se há algum item possível de pegar
+      for(auto item: this->nos[cidade].itens_to_roubar){
+        auto prob = (double)item.lucro/item.peso;
+        probabilidades.push_back(prob);
+        somaP+=prob;
+        if(item.peso + capacidade_atual <= this->capacidade_mochila)
+          ha_candidatos = true;
+      }
+      // Nào é possível pegar ninguém, vai para a outra cidade
+      if(!ha_candidatos)
+        continue;
+
+      // Normalizando probabilidades
+      for(auto& probNaoNormalizada : probabilidades)
+        probNaoNormalizada/=somaP;
+
+      double escolhaAleatoria = static_cast<double>(std::rand()) / RAND_MAX;
+      double roleta = 0.0;
+
+      // Roletando
+      int i = 0;
+      while(i<probabilidades.size()){
+
+        roleta = roleta + probabilidades[i];
+        // Escolhe com base na lógica da roleta
+        
+        if (escolhaAleatoria <= roleta){
+          auto item = this->nos[cidade].itens_to_roubar[i];
+          if(item.peso + capacidade_atual <= this->capacidade_mochila){
+            mochila.push_back(item);
+            capacidade_atual += item.peso;
+            break;
+          }
+          else{
+            escolhaAleatoria = static_cast<double>(std::rand()) / RAND_MAX;
+            roleta = 0;
+            i = -1;
+          }
+        } 
+        ++i;
+    }
+  }
+}
+
+std::vector<int> Grafo::gera_mochila(std::vector<int> rota, std::vector<int>& mochila_simples){
+  std::vector<int> retorno;
+  return retorno;
 }
 
 void Grafo::atualiza_velocidade(Item& item){
@@ -377,10 +447,10 @@ void Grafo::traduz_caminho_interno_to_externo(std::vector<int> caminho_interno, 
     caminho_traduzido.push_back(elemento+1);
 }
 
-void Grafo::traduz_caminho_interno_to_externo(std::vector<int> caminho_externo, std::vector<int>& caminho_traduzido){
+/*void Grafo::traduz_caminho_interno_to_externo(std::vector<int> caminho_externo, std::vector<int>& caminho_traduzido){
   for(auto elemento : caminho_externo)
     caminho_traduzido.push_back(elemento-1);
-}
+}*/
 
 bool Grafo::validarSolucao(std::vector<int> solucao){
   return true;
