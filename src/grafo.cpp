@@ -181,6 +181,8 @@ Grafo::Grafo(std::string filename){
     this->capacidade_mochila = std::stof(conteudos_cabecalhos[2]);
     this->v_min = std::stof(conteudos_cabecalhos[3]);
     this->v_max = std::stof(conteudos_cabecalhos[4]);
+    this->v_atual = this->v_max;
+    this->carga_atual = 0.0;
     this->custo_aluguel = std::stof(conteudos_cabecalhos[5]);
 
     //this->printa_nos();
@@ -360,6 +362,14 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, float taxaEvapora
     this->traduz_caminho_interno_to_externo(melhorCaminho, melhorCaminho_Convertido_para_exibir);
 
     return melhorCaminho_Convertido_para_exibir;
+}
+
+std::vector<int> Grafo::gera_mochila(std::vector<int> rota, std::vector<int>& mochila_simples){
+
+}
+
+void Grafo::atualiza_velocidade(Item& item){
+  this->v_atual = this->v_max - item.peso*(this->v_max-this->v_min)/this->capacidade_mochila;
 }
 
 void Grafo::traduz_caminho_interno_to_externo(std::vector<int> caminho_interno, std::vector<int>& caminho_traduzido){

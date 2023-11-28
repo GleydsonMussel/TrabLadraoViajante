@@ -44,6 +44,8 @@ class Grafo final {
     double calcDistancia_Total(std::vector<int> caminho);
     void traduz_caminho_interno_to_externo(std::vector<int> caminho_interno, std::vector<int>& caminho_traduzido);
     void traduz_caminho_externo_to_interno(std::vector<int> caminho_externo, std::vector<int>& caminho_traduzido);
+    std::vector<int> gera_mochila(std::vector<int> rota, std::vector<int>& mochila_simples);
+    void atualiza_velocidade(Item& item);
 
   private:
     std::vector<Vertice> nos{};
@@ -53,7 +55,9 @@ class Grafo final {
     int numero_itens;
     float v_min;
     float v_max;
+    float v_atual;
     float custo_aluguel;
+    float carga_atual;
     int ordem;
     int dimensao;
     
