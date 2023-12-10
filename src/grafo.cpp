@@ -179,8 +179,8 @@ Grafo::Grafo(std::string filename)
     vetor.clear();
   }
 
-  std::cout << "Numero de nos do grafo: " << this->ordem << "\n";
-  std::cout << "Ordem da matrix de distancias: " << this->matrix_distancias.size() << "x" << this->matrix_distancias[1].size() << "\n";
+  //std::cout << "Numero de nos do grafo: " << this->ordem << "\n";
+  //std::cout << "Ordem da matrix de distancias: " << this->matrix_distancias.size() << "x" << this->matrix_distancias[1].size() << "\n";
 
   // Salvando dados cabecalho
   this->dimensao = std::stof(conteudos_cabecalhos[0]);
@@ -242,7 +242,6 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
 
   for (int iteracao = 0; iteracao < numIteracoes; ++iteracao)
   {
-
     for (int k = 0; k < numFormigas; ++k)
     {
 
@@ -442,6 +441,7 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
 
   // Traduz a impressão do caminho
   this->traduz_caminho_interno_to_externo(melhorCaminho, melhorCaminho_Convertido_para_exibir);
+  this->problema_mochila(melhorCaminho);
 
   return melhorCaminho_Convertido_para_exibir;
 }
@@ -609,6 +609,82 @@ double Grafo::calcula_lucro(std::vector<double> &tempos,std::vector<double> velo
   return this->calcula_montante_saque(mochila) - valor;
 }
 
+void Grafo::busca_local(std::vector<Item>& itens, double& valor, int& peso, std::vector<std::pair<Item, double>>& lucroItem, int capacidade_mochila)
+{
+    for (size_t i = 0; i < itens.size(); ++i)
+    {
+        for (size_t j = i + 1; j < itens.size(); ++j)
+        {
+            // Tenta trocar os itens i e j
+            if (peso - itens[i].peso + itens[j].peso <= capacidade_mochila &&
+                peso - itens[j].peso + itens[i].peso <= capacidade_mochila)
+            {
+                double novoValor = valor - lucroItem[i].second * itens[i].peso - lucroItem[j].second * itens[j].peso +
+                                   lucroItem[i].second * itens[j].peso + lucroItem[j].second * itens[i].peso;
+
+                // Se a troca melhora o valor, realiza a troca
+                if (novoValor > valor)
+                {
+                    valor = novoValor;
+                    peso = peso - itens[i].peso + itens[j].peso;
+                    std::swap(itens[i], itens[j]);
+                }
+            }
+        }
+    }
+}
+
+
+
+void Grafo::problema_mochila(std::vector<int> caminho)
+{
+    std::vector<std::pair<Item, int>> itens;
+    std::vector<std::pair<Item, double>> lucroItem;
+    int peso = 0;
+    std::vector<Item> itensFinais;
+    double valorFinal = 0.0;
+
+    for (int no : caminho)
+    {
+        for (auto item : nos[no].itens_to_roubar)
+        {
+            itens.push_back(std::make_pair(item, no));
+        }
+    }
+
+    for (auto item : itens)
+    {
+        double camin = 0;
+        for (int i = item.second; i < caminho.size() - 1; ++i)
+        {
+            camin += this->matrix_distancias[caminho[i]][caminho[i + 1]];
+        }
+
+        double velo = this->calculador_velocidade(this->v_max, item.first.peso);
+
+        lucroItem.push_back(std::make_pair(item.first, (((camin * this->custo_aluguel) / (velo - (item.first.peso * (this->v_max - this->v_min) / this->capacidade_mochila))) - ((camin * this->custo_aluguel) / (velo)))/item.first.peso));
+    }
+
+    std::sort(lucroItem.begin(), lucroItem.end(), [](const std::pair<Item, double>& a, const std::pair<Item, double>& b) {
+        return a.second > b.second;
+    });
+
+    for (auto lucro : lucroItem)
+    {
+        if (this->capacidade_mochila >= (peso + lucro.first.peso))
+        {
+            itensFinais.push_back(lucro.first);
+            peso += lucro.first.peso;
+            valorFinal += lucro.second * lucro.first.peso;
+        }
+    }
+    std::cout << "valor final: " << valorFinal << std::endl;
+    busca_local(itensFinais, valorFinal, peso, lucroItem, this->capacidade_mochila);
+    std::cout << "valor final (após busca local): " << valorFinal << std::endl;
+}
+
+
+
 void Grafo::printa_matrix_feromonios(std::vector<std::vector<double>> &feromonios, int iteracao, int numFormigas)
 {
   for (auto g = iteracao * numFormigas; g < registro_geral_formigas_caminho.size(); ++g)
@@ -618,6 +694,8 @@ void Grafo::printa_matrix_feromonios(std::vector<std::vector<double>> &feromonio
     // std::cout<<"\n";
   }
 }
+
+
 
 void Grafo::print_dados_ACO(double custo_primeiro_caminho, double custo_melhor_caminho, double lucro_primeiro_caminho, double lucro_melhor_caminho, std::vector<double> &velocidades, std::vector<double> &tempos, std::vector<saque_cidade> &mochila, int peso)
 {
@@ -644,6 +722,7 @@ void Grafo::print_dados_ACO(double custo_primeiro_caminho, double custo_melhor_c
   std::cout << "Tempo Total: " << this->calcula_tempo_total(tempos) << "\n";
   std::cout << "Lucro Primeiro Caminho: " << lucro_primeiro_caminho << "\n";
   std::cout << "Lucro Ultimo Caminho: " << lucro_melhor_caminho << "\n";
+  
 }
 
 /*void Grafo::traduz_caminho_interno_to_externo(std::vector<int> caminho_externo, std::vector<int>& caminho_traduzido){
