@@ -57,6 +57,7 @@ class Grafo final {
     double calcula_lucro(std::vector<double> &tempos,std::vector<double> velocidade, std::vector<saque_cidade> &mochila,std::vector<int> caminho);
     void print_dados_ACO(double custo_primeiro_caminho, double custo_melhor_caminho, double lucro_primeiro_caminho, double lucro_melhor_caminho, std::vector<double>& velocidades, std::vector<double>& tempos,std::vector<saque_cidade>& mochila, int peso);
     void printa_matrix_feromonios( std::vector<std::vector<double>>& feromonios, int iteracao, int numFormigas);
+    double best_lucro;
 
   private:
     std::vector<Vertice> nos{};

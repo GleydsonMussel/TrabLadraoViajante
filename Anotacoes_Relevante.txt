@@ -14,3 +14,25 @@ Estretégia para o ACO:
                 No fim, para os x% mais promissores, aplicar um otimizador mais pesado para a mochila
 
                 COMEÇAR DEIXANDO O ACO PARA AS ROTAS FUNCIONANDO
+
+
+ESTRATÉGIA 2
+
+	Calcular para todo item o lucro SUPONDO a cidade em que ele está e QUE ELE NÃO PEGARIA NINGUÉM mais, QUANTO DE LUCRO ELE DARIA, usando a velocidade atual do carro, baseado nos itens que já foram pegos
+	SE ELE DER LUCRO, PEGA, SE NÃO, ele nem entra como candidato a ser pego
+	FAZER ISSO GLOBALMENTE, OU SEJA, CONSEIDERAR O LUCRO GLOBAL DELE COM A VELOCIDADE ATUAL QUE O LADRÃO TEM
+	
+	Assim que construir a rota, salvar a distância parcial de cada cidade da rota até o fim dela 
+
+
+	ACRESCENTAR NESSE VIÉS, A CHANCE DE TAMBÉM NÃO PEGAR NINGUÉM
+
+	BUSCAS LOCAIS:
+
+	Confiar na rota gerada pelo ACO, otimizar mochila:
+		
+		Trocar itens pegos por outros pegos na cidade
+
+		Poder retirar itens que forem alocados e tentar inserir outros itens no lugar
+		
+		
