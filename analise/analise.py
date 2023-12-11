@@ -103,27 +103,31 @@ with open("./outputs/resultado.txt", "r") as arquivo:
             cont_linha +=1
         else:
             break
-dic_media_lucros_literatura = {}
-dic_media_lucros_literatura["berlin52"] = lucros_berlin52
-dic_media_lucros_literatura["d1291"] = lucros_d1291
-dic_media_lucros_literatura["d2103"] = lucros_d2103
-dic_media_lucros_literatura["d657"] = lucros_d657
-dic_media_lucros_literatura["eil101"] = lucros_eil101
-dic_media_lucros_literatura["eil51"] = lucros_eil51
-dic_media_lucros_literatura["eil76"] = lucros_eil76
-dic_media_lucros_literatura["fl1577"] = lucros_fl1577
-dic_media_lucros_literatura["gil262"] = lucros_gil262
-dic_media_lucros_literatura["pr1002"] = lucros_pr1002
-dic_media_lucros_literatura["pr124"] = lucros_pr124
-dic_media_lucros_literatura["pr76"] = lucros_pr76
-dic_media_lucros_literatura["rat195"] = lucros_rat195
-dic_media_lucros_literatura["rd400"] = lucros_rd400
-dic_media_lucros_literatura["st70"] = lucros_st70
+dic_media_MELHOR_lucros_literatura = {}
+dic_media_MELHOR_lucros_literatura["berlin52"] = lucros_berlin52
+dic_media_MELHOR_lucros_literatura["d1291"] = lucros_d1291
+dic_media_MELHOR_lucros_literatura["d2103"] = lucros_d2103
+dic_media_MELHOR_lucros_literatura["d657"] = lucros_d657
+dic_media_MELHOR_lucros_literatura["eil101"] = lucros_eil101
+dic_media_MELHOR_lucros_literatura["eil51"] = lucros_eil51
+dic_media_MELHOR_lucros_literatura["eil76"] = lucros_eil76
+dic_media_MELHOR_lucros_literatura["fl1577"] = lucros_fl1577
+dic_media_MELHOR_lucros_literatura["gil262"] = lucros_gil262
+dic_media_MELHOR_lucros_literatura["pr1002"] = lucros_pr1002
+dic_media_MELHOR_lucros_literatura["pr124"] = lucros_pr124
+dic_media_MELHOR_lucros_literatura["pr76"] = lucros_pr76
+dic_media_MELHOR_lucros_literatura["rat195"] = lucros_rat195
+dic_media_MELHOR_lucros_literatura["rd400"] = lucros_rd400
+dic_media_MELHOR_lucros_literatura["st70"] = lucros_st70
 
 dic_media_lucros_home_made = {}
 
 for instancia in dic_lucros:
     dic_media_lucros_home_made[instancia] = np.mean(dic_lucros[instancia])
+
+# Normaliza os lucros obtidos com base nos valores da literatura
+lucros_normalizados = [dic_media_lucros_home_made[instancia]/dic_media_MELHOR_lucros_literatura[instancia] for instancia in dic_media_lucros_home_made]
+nomes_instancias = ["berlin52", "d1291", "d2103","d657", "eil101", "eil51", "eil76", "fl1577", "gil262", "pr1002", "pr124", "pr76", "rat195", "rd400", "st70"]
 
 alal = 0
     
