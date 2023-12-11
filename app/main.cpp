@@ -36,7 +36,8 @@ int main(int argc, const char* argv[]){
             // Pega o tempo decorrido em segundos
             auto tempo = timer.elapsed();
             acumulador_tempos += tempo;
-            
+        
+
             auto instancia_rodada = entry.path().filename().string();
             
             arquivo << instancia_rodada << "\n";
