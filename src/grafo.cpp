@@ -636,7 +636,6 @@ void Grafo::busca_local(std::vector<Item>& itens, double& valor, int& peso, std:
         }
     }
 }
-
 // void trocar_itens(std::vector<Item> &itens, double &valor, int &peso, std::vector<std::pair<Item, double>> &lucroItem, int capacidade_mochila)
 // {
 //     for (size_t i = 0; i < itens.size(); ++i)
@@ -760,8 +759,8 @@ void Grafo::problema_mochila(std::vector<int> caminho)
     }
   }
   //std::cout << "valor final: " << valorFinal << std::endl;
-  busca_local(itensFinais, valorFinal, peso, lucroItem, this->capacidade_mochila);
-  remove_insert(itensFinais, valorFinal, peso, lucroItem, this->capacidade_mochila);
+  //busca_local(itensFinais, valorFinal, peso, lucroItem, this->capacidade_mochila);
+  //remove_insert(itensFinais, valorFinal, peso, lucroItem, this->capacidade_mochila);
   if(best_lucro < valorFinal){
     best_lucro = valorFinal;
   }
