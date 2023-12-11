@@ -759,7 +759,7 @@ void Grafo::problema_mochila(std::vector<int> caminho)
       valorFinal += lucro.second * lucro.first.peso;
     }
   }
-  std::cout << "valor final: " << valorFinal << std::endl;
+  //std::cout << "valor final: " << valorFinal << std::endl;
   busca_local(itensFinais, valorFinal, peso, lucroItem, this->capacidade_mochila);
   remove_insert(itensFinais, valorFinal, peso, lucroItem, this->capacidade_mochila);
   if(best_lucro < valorFinal){
@@ -779,31 +779,31 @@ void Grafo::printa_matrix_feromonios(std::vector<std::vector<double>> &feromonio
 
 void Grafo::print_dados_ACO(double custo_primeiro_caminho, double custo_melhor_caminho, double lucro_primeiro_caminho, double lucro_melhor_caminho, std::vector<double> &velocidades, std::vector<double> &tempos, std::vector<saque_cidade> &mochila, int peso)
 {
-  std::cout << "Distancia primeiro caminho: " << custo_primeiro_caminho << "\n";
-  std::cout << "Distancia melhor caminho: " << custo_melhor_caminho << "\n";
+//   //std::cout << "Distancia primeiro caminho: " << custo_primeiro_caminho << "\n";
+//   //std::cout << "Distancia melhor caminho: " << custo_melhor_caminho << "\n";
 
-  std::cout << "Mochila do Melhor caminho: ";
-  for (auto &[itens_mochila, indice_cidade] : mochila)
-    for (auto &item_roubado : itens_mochila)
-      std::cout << item_roubado.id << " ";
-  std::cout << "\n";
+//   //std::cout << "Mochila do Melhor caminho: ";
+//   for (auto &[itens_mochila, indice_cidade] : mochila)
+//     for (auto &item_roubado : itens_mochila)
+//       //std::cout << item_roubado.id << " ";
+//   //std::cout << "\n";
 
-  std::cout << "Peso Mochila: " << peso << "\n";
-  std::cout << "Capacidade Maxima:: " << this->capacidade_mochila << "\n";
+//   //std::cout << "Peso Mochila: " << peso << "\n";
+//   //std::cout << "Capacidade Maxima:: " << this->capacidade_mochila << "\n";
 
-  std::cout << "Vetor velocidade: [";
-  for (auto &velocidade : velocidades)
-    std::cout << velocidade << " ";
-  std::cout << "]\n";
-  std::cout << "Vetor tempos: [";
-  for (auto &tempo : tempos)
-    std::cout << tempo << " ";
-  std::cout << "]\n";
-  std::cout << "Tempo Total: " << this->calcula_tempo_total(tempos) << "\n";
-  std::cout << "Lucro Primeiro Caminho: " << lucro_primeiro_caminho << "\n";
-  std::cout << "Lucro Ultimo Caminho: " << lucro_melhor_caminho << "\n";
+//   //std::cout << "Vetor velocidade: [";
+//   // for (auto &velocidade : velocidades)
+//   //   //std::cout << velocidade << " ";
+//   // //std::cout << "]\n";
+//   // //std::cout << "Vetor tempos: [";
+//   // for (auto &tempo : tempos)
+//   //   std::cout << tempo << " ";
+//   // std::cout << "]\n";
+//   // std::cout << "Tempo Total: " << this->calcula_tempo_total(tempos) << "\n";
+//   // std::cout << "Lucro Primeiro Caminho: " << lucro_primeiro_caminho << "\n";
+//   // std::cout << "Lucro Ultimo Caminho: " << lucro_melhor_caminho << "\n";
+// }
 }
-
 /*void Grafo::traduz_caminho_interno_to_externo(std::vector<int> caminho_externo, std::vector<int>& caminho_traduzido){
   for(auto elemento : caminho_externo)
     caminho_traduzido.push_back(elemento-1);
