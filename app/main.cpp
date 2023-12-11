@@ -37,7 +37,6 @@ int main(int argc, const char* argv[]){
             auto tempo = timer.elapsed();
             acumulador_tempos += tempo;
         
-            grafo.best_lucro = 20;
 
             auto instancia_rodada = entry.path().filename().string();
             
