@@ -75,7 +75,7 @@ dic_lucros["pr76"] = lucros_pr76
 dic_lucros["rat195"] = lucros_rat195
 dic_lucros["rd400"] = lucros_rd400
 dic_lucros["st70"] = lucros_st70
-
+"""
 with open("./outputs/resultado.txt", "r") as arquivo:
     cont_linha = 0
     linhas = arquivo.readlines()
@@ -103,6 +103,7 @@ with open("./outputs/resultado.txt", "r") as arquivo:
             cont_linha +=1
         else:
             break
+        
 dic_media_MELHOR_lucros_literatura = {}
 dic_media_MELHOR_lucros_literatura["berlin52"] = lucros_berlin52
 dic_media_MELHOR_lucros_literatura["d1291"] = lucros_d1291
@@ -124,10 +125,11 @@ dic_media_lucros_home_made = {}
 
 for instancia in dic_lucros:
     dic_media_lucros_home_made[instancia] = np.mean(dic_lucros[instancia])
-
-# Normaliza os lucros obtidos com base nos valores da literatura
-lucros_normalizados = [dic_media_lucros_home_made[instancia]/dic_media_MELHOR_lucros_literatura[instancia] for instancia in dic_media_lucros_home_made]
+"""
 nomes_instancias = ["berlin52", "d1291", "d2103","d657", "eil101", "eil51", "eil76", "fl1577", "gil262", "pr1002", "pr124", "pr76", "rat195", "rd400", "st70"]
-
+# Normaliza os lucros obtidos com base nos valores da literatura
+#lucros_normalizados = [dic_media_lucros_home_made[instancia]/dic_media_MELHOR_lucros_literatura[instancia] for instancia in dic_media_lucros_home_made]
+lucros_normalizados = [i for i in range(len(nomes_instancias))]
+plota_grafico.plotar_pontos(nomes_instancias, lucros_normalizados, "Lucros_Nomalizado", "Lucros Normalizados com a Literatura", "Lucro Normalizado")
 alal = 0
     
