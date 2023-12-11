@@ -9,6 +9,7 @@
 #include <unordered_set>
 #include <vector>
 #include <string>
+#include <utility>
 
 // Struct auxiliar para controlar como foi o saque na cidade
 struct saque_cidade{
@@ -57,6 +58,10 @@ class Grafo final {
     double calcula_lucro(std::vector<double> &tempos,std::vector<double> velocidade, std::vector<saque_cidade> &mochila,std::vector<int> caminho);
     void print_dados_ACO(double custo_primeiro_caminho, double custo_melhor_caminho, double lucro_primeiro_caminho, double lucro_melhor_caminho, std::vector<double>& velocidades, std::vector<double>& tempos,std::vector<saque_cidade>& mochila, int peso);
     void printa_matrix_feromonios( std::vector<std::vector<double>>& feromonios, int iteracao, int numFormigas);
+    void problema_mochila(std::vector<int> caminho);
+    void trocar_itens(std::vector<Item> &itens, double &valor, int &peso, std::vector<std::pair<Item, double>> &lucroItem, int capacidade_mochila);
+    void busca_local(std::vector<Item>& itens, double& valor, int& peso, std::vector<std::pair<Item, double>>& lucroItem, int capacidade_mochila);
+    void remove_insert(std::vector<Item> &itens, double &valor, int &peso, std::vector<std::pair<Item, double>> &lucroItem, int capacidade_mochila);
     double best_lucro;
 
   private:

@@ -29,7 +29,7 @@ int main(int argc, const char* argv[]){
             auto timer = Timer{};
             
             Grafo grafo("../instances/"+entry.path().filename().string());
-            //grafo.ACO(100,70,0.2,1,1);
+            grafo.ACO(100,70,0.2,1,1);
             
             // Pega o tempo decorrido em segundos
             auto tempo = timer.elapsed();
@@ -42,7 +42,7 @@ int main(int argc, const char* argv[]){
             arquivo << instancia_rodada << "\n";
             arquivo << grafo.best_lucro << "\n";
             arquivo << tempo << "\n"; 
-            std::cout<<"Li o arquivo: "<<instancia_rodada<<"\n";
+            //std::cout<<"Li o arquivo: "<<instancia_rodada<<"\n";
         }
         arquivo << "FIM\n";
         arquivo << "\nTempo Total(s): " << acumulador_tempos;
