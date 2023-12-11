@@ -18,6 +18,8 @@ int main(int argc, const char* argv[]){
     std::vector<int> custosIniciais, custosFinais;
     
     std::ofstream arquivo("../outputs/resultado.txt");
+
+    int cont_arquivos = 0;
     
     if(arquivo.is_open()){
 
@@ -42,15 +44,16 @@ int main(int argc, const char* argv[]){
             arquivo << instancia_rodada << "\n";
             arquivo << grafo.best_lucro << "\n";
             arquivo << tempo << "\n"; 
-            //std::cout<<"Li o arquivo: "<<instancia_rodada<<"\n";
+            std::cout<<cont_arquivos<<"\n";
+            cont_arquivos++;
         }
-
+        arquivo << "FIM\n";
         arquivo << "\nTempo Total(s): " << acumulador_tempos;
 
         arquivo.close();
 
     }
-    
+
     return 0;
 
 }
