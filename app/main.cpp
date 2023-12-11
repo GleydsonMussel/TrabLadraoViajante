@@ -44,13 +44,13 @@ int main(int argc, const char* argv[]){
             arquivo << tempo << "\n"; 
             std::cout<<"Li o arquivo: "<<instancia_rodada<<"\n";
         }
-
+        arquivo << "FIM\n";
         arquivo << "\nTempo Total(s): " << acumulador_tempos;
 
         arquivo.close();
 
     }
-    
+
     return 0;
 
 }
