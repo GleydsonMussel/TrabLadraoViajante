@@ -438,7 +438,7 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
   this->gera_vetor_tempos(melhorCaminho, velocidades, tempos);
   // Printa vários dados relativos às soluções obtidas no ACO
   this->print_dados_ACO(custo_primeiro_caminho, custo_melhor_caminho, lucro_primeiro_caminho, lucro_melhor_caminho, velocidades, tempos, mochila, peso);
-
+  this->best_lucro = custo_melhor_caminho;
   // Traduz a impressão do caminho
   this->traduz_caminho_interno_to_externo(melhorCaminho, melhorCaminho_Convertido_para_exibir);
   this->problema_mochila(melhorCaminho);
@@ -762,7 +762,9 @@ void Grafo::problema_mochila(std::vector<int> caminho)
   std::cout << "valor final: " << valorFinal << std::endl;
   busca_local(itensFinais, valorFinal, peso, lucroItem, this->capacidade_mochila);
   remove_insert(itensFinais, valorFinal, peso, lucroItem, this->capacidade_mochila);
-  std::cout << "valor final (após busca local): " << valorFinal << std::endl;
+  if(best_lucro < valorFinal){
+    best_lucro = valorFinal;
+  }
 }
 
 void Grafo::printa_matrix_feromonios(std::vector<std::vector<double>> &feromonios, int iteracao, int numFormigas)
