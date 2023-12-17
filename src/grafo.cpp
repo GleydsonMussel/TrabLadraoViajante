@@ -367,7 +367,7 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
       auto influencia_mochila = (registro_geral_formigas_lucros[g] + std::abs(menor_lucro)) / (maior_lucro + std::abs(menor_lucro));
       feromonioDepositado = (1.0 / this->calcDistancia_Total(registro_geral_formigas_caminho[g])) + influencia_mochila;
       
-      for (int i = 0; i < registro_geral_formigas_caminho[g].size() - 1; ++i){
+      for (int i = 0; i < registro_geral_formigas_caminho[g].size() - 2; ++i){
         feromonios[registro_geral_formigas_caminho[g][i]][registro_geral_formigas_caminho[g][i + 1]] += feromonioDepositado;
         feromonios[registro_geral_formigas_caminho[g][i + 1]][registro_geral_formigas_caminho[g][i]] += feromonioDepositado;
       }
