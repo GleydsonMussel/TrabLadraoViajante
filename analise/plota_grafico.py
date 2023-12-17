@@ -14,3 +14,4 @@ def plotar_pontos(valores_x, valores_y, nome_grafico, titulo, label_y):
     plt.savefig("./Graficos/"+nome_grafico+".png")
     plt.show()
 
+ 

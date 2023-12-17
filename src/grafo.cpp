@@ -227,8 +227,8 @@ double Grafo::calcDistancia_Total(std::vector<int> caminho)
   return custo;
 }
 
-std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvaporacao, double alpha, double beta)
-{
+std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvaporacao, double alpha, double beta){
+
   const int numVertices = this->ordem;
   int id_formiga = 0, id_melhor_formiga;
   double custo_primeiro_caminho, custo_caminho_final, lucro_primeiro_caminho, lucro_melhor_caminho;
@@ -240,10 +240,9 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
   double melhorDistancia = std::numeric_limits<double>::max();
   double melhor_lucro_formiga = std::numeric_limits<double>::max();
 
-  for (int iteracao = 0; iteracao < numIteracoes; ++iteracao)
-  {
-    for (int k = 0; k < numFormigas; ++k)
-    {
+  for (int iteracao = 0; iteracao < numIteracoes; ++iteracao){
+    
+    for (int k = 0; k < numFormigas; ++k){
 
       int posicaoAtual = Random::get(0, numVertices - 1);
       std::vector<int> caminho;
@@ -254,24 +253,20 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
       this->nos[posicaoAtual].visitado = true;
       caminho.push_back(posicaoAtual);
 
-      for (int i = 0; i < numVertices - 1; ++i)
-      {
+      for (int i = 0; i < numVertices - 1; ++i){
         std::vector<double> probabilidades;
         double somatorio = 0.0;
 
-        for (int j = 0; j < numVertices; ++j)
-        {
-          if (j != posicaoAtual && !this->nos[j].visitado)
-          {
+        for (int j = 0; j < numVertices; ++j){
+          if (j != posicaoAtual && !this->nos[j].visitado){
             // Cálculo das probabilidades para os vértices vizinhos não visitados
             double probabilidade = std::pow(feromonios[posicaoAtual][j], alpha) * std::pow(1.0 / this->matrix_distancias[posicaoAtual][j], beta);
             probabilidades.push_back(probabilidade);
             somatorio += probabilidade;
           }
           else
-          {
             probabilidades.push_back(0.0);
-          }
+          
         }
 
         double probabilidadeTotal = 0.0;
@@ -280,27 +275,22 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
         bool achou_candidato = false;
         int j = 0;
 
-        while (j < probabilidades.size() && !achou_candidato)
-        {
+        while (j < probabilidades.size() && !achou_candidato){
 
-          // Nomraliza cada valor presente no vetor de probabilidades com base no somatório, assim, só serão obtidos valores entre 0 e 1, além da soma de todos eles resultar em 1
-          probabilidades[j] = probabilidades[j] / somatorio;
-          probabilidadeTotal = probabilidadeTotal + probabilidades[j];
+          // Calcula a probabilidade normalizada
+          probabilidadeTotal = probabilidadeTotal + probabilidades[j] / somatorio;
 
           // Escolhe com base na lógica da roleta
-          if (escolhaAleatoria <= probabilidadeTotal)
-          {
+          if (escolhaAleatoria <= probabilidadeTotal){
             posicaoProvisoria = j;
             // Verifica se alguém válido
-            if (!this->nos[posicaoProvisoria].visitado)
-            {
+            if (!this->nos[posicaoProvisoria].visitado){
               posicaoAtual = posicaoProvisoria;
               this->nos[posicaoAtual].visitado = true;
               achou_candidato = true;
               break;
             }
-            else
-            {
+            else{
               j = -1;
               escolhaAleatoria = static_cast<double>(std::rand()) / RAND_MAX;
               probabilidadeTotal = 0;
@@ -312,8 +302,7 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
         if (achou_candidato)
           caminho.push_back(posicaoAtual);
 
-        if (caminho.size() == numVertices)
-        {
+        if (caminho.size() == numVertices){
           // Adicionando o primeiro vértice ao final para completar o ciclo
           caminho.push_back(caminho[0]);
           break;
@@ -326,10 +315,6 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
 
       // Contabiliza pontos relevantes sobre cada formiga
       registro_geral_formigas_caminho[id_formiga] = caminho;
-      // this->gera_vetor_velocidades(mochila, velocidades);
-      // registro_geral_formigas_velocidades[id_formiga] = velocidades;
-      // this->gera_vetor_tempos(caminho, velocidades, tempos);
-      // std::cout << "antes da mochila: " << this->calcula_lucro(tempos, mochila) << std::endl;
       this->gera_mochila_light(caminho, mochila);
       registro_geral_formigas_mochila[id_formiga] = mochila;
       this->gera_vetor_velocidades(mochila, velocidades);
@@ -338,8 +323,6 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
 
       double distanciaTotal = this->calcDistancia_Total(caminho);
       auto lucro_formiga = this->calcula_lucro(tempos, velocidades, mochila, caminho);
-      // std::cout << "depois da mochila: " << lucro_formiga << std::endl;
-      // std::cout << "lucro da formiga" << lucro_formiga << " melhor lucro" << lucro_melhor_caminho << std::endl;
 
       if (iteracao == 0 && k == 0)
       {
@@ -363,20 +346,12 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
       for (int j = 0; j < numVertices; ++j)
         feromonios[i][j] = feromonios[i][j] * (1.0 - taxaEvaporacao);
 
-    // Imprime matriz de feromônios antes deles serem atualizados
-    /*
-    std::cout<<"Matriz Feromonios Antes:\n";
-    this->printa_matrix_feromonios(feromonios, iteracao, numFormigas);
-    std::cout<<"\n";
-    */
-
     // Pega o índice do menor e do maior lucro
     int indice_menor_lucro = iteracao * numFormigas;
     int indice_maior_lucro = iteracao * numFormigas;
     double menor_lucro = registro_geral_formigas_lucros[iteracao * numFormigas];
     double maior_lucro = registro_geral_formigas_lucros[iteracao * numFormigas];
-    for (auto g = (iteracao * numFormigas) + 1; g < registro_geral_formigas_lucros.size(); ++g)
-    {
+    for (auto g = (iteracao * numFormigas) + 1; g < registro_geral_formigas_lucros.size(); ++g){
       if (registro_geral_formigas_lucros[g] < menor_lucro)
       {
         menor_lucro = registro_geral_formigas_lucros[g];
@@ -389,39 +364,27 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
       }
     }
 
-    for (auto g = iteracao * numFormigas; g < registro_geral_formigas_caminho.size(); ++g)
-    {
+    for (auto g = iteracao * numFormigas; g < registro_geral_formigas_caminho.size(); ++g){
 
       double feromonioDepositado;
 
       if (this->matrix_distancias[numVertices - 1][registro_geral_formigas_caminho[g][0]] == 0)
-      {
         feromonioDepositado = 0;
-      }
-      else
-      {
+      
+      else{
         // Normaliza o lucro obtido pela solução com base no maior e menor lucro, também vai influenciar a deposição de feromônio
         auto influencia_mochila = (registro_geral_formigas_lucros[g] + std::abs(menor_lucro)) / (maior_lucro + std::abs(menor_lucro));
-        feromonioDepositado = (1.0 / this->matrix_distancias[numVertices - 1][registro_geral_formigas_caminho[g][0]]) + influencia_mochila;
+        feromonioDepositado = (1.0 / this->calcDistancia_Total(registro_geral_formigas_caminho[g])) + influencia_mochila;
       }
 
-      for (int i = 0; i < registro_geral_formigas_caminho[g].size() - 1; ++i)
-      {
+      for (int i = 0; i < registro_geral_formigas_caminho[g].size() - 1; ++i){
         feromonios[registro_geral_formigas_caminho[g][i]][registro_geral_formigas_caminho[g][i + 1]] += feromonioDepositado;
         feromonios[registro_geral_formigas_caminho[g][i + 1]][registro_geral_formigas_caminho[g][i]] += feromonioDepositado;
       }
     }
-
-    // Printando matriz de feromômios após atualização
-    /*
-    std::cout<<"Matriz Feromonios Depois:\n";
-    this->printa_matrix_feromonios(feromonios, iteracao, numFormigas);
-    */
   }
 
   double custo_melhor_caminho = this->calcDistancia_Total(melhorCaminho);
-
-  std::vector<int> melhorCaminho_Convertido_para_exibir;
 
   std::vector<saque_cidade> mochila = registro_geral_formigas_mochila[id_melhor_formiga];
 
@@ -439,11 +402,8 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
   // Printa vários dados relativos às soluções obtidas no ACO
   this->print_dados_ACO(custo_primeiro_caminho, custo_melhor_caminho, lucro_primeiro_caminho, lucro_melhor_caminho, velocidades, tempos, mochila, peso);
   this->best_lucro = custo_melhor_caminho;
-  // Traduz a impressão do caminho
-  this->traduz_caminho_interno_to_externo(melhorCaminho, melhorCaminho_Convertido_para_exibir);
-  this->problema_mochila(melhorCaminho);
 
-  return melhorCaminho_Convertido_para_exibir;
+  return melhorCaminho;
 }
 
 double Grafo::calculador_velocidade(double velocidade_atual, double peso_item)

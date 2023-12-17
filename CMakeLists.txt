@@ -16,7 +16,6 @@ add_test(NAME test1 COMMAND test1)
 add_executable(main app/main.cpp)
 target_link_libraries(main ic)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 
 
