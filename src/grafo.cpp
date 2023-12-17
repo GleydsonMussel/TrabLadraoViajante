@@ -226,7 +226,7 @@ double Grafo::calcDistancia_Total(std::vector<int> caminho){
   return custo;
 }
 
-std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvaporacao, double alpha, double beta){
+int Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvaporacao, double alpha, double beta){
 
   const int numVertices = this->ordem;
   int id_formiga = 0, id_melhor_formiga;
@@ -393,7 +393,7 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
   this->print_dados_ACO(custo_primeiro_caminho, custo_melhor_caminho, lucro_primeiro_caminho, lucro_melhor_caminho, velocidades, tempos, mochila, peso);
   this->best_lucro = custo_melhor_caminho;
 
-  return melhorCaminho;
+  return id_melhor_formiga;
 }
 
 double Grafo::calculador_velocidade(double velocidade_atual, double peso_item)

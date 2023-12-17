@@ -44,7 +44,7 @@ class Grafo final {
     }  
     void printa_itens();   
     // Otimizadores                                   
-    std::vector<int> ACO(int numIteracoes, int numFormigas, double taxaEvaporacao, double alpha, double beta);
+    int ACO(int numIteracoes, int numFormigas, double taxaEvaporacao, double alpha, double beta);
     double calcDistancia_Total(std::vector<int> caminho);
     void traduz_caminho_interno_to_externo(std::vector<int> caminho_interno, std::vector<int>& caminho_traduzido);
     void traduz_caminho_externo_to_interno(std::vector<int> caminho_externo, std::vector<int>& caminho_traduzido);
