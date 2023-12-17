@@ -237,7 +237,6 @@ int Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvaporacao, double 
 
   std::vector<int> melhorCaminho;
   double melhorDistancia = std::numeric_limits<double>::max();
-  double melhor_lucro_formiga = std::numeric_limits<double>::max();
 
   for (int iteracao = 0; iteracao < numIteracoes; ++iteracao){
 
