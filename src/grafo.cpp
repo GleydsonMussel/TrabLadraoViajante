@@ -215,8 +215,7 @@ void Grafo::printa_itens()
   // }
 }
 
-double Grafo::calcDistancia_Total(std::vector<int> caminho)
-{
+double Grafo::calcDistancia_Total(std::vector<int> caminho){
 
   double custo = 0;
   for (auto i = 0; i < caminho.size() - 1; ++i)
@@ -241,7 +240,7 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
   double melhor_lucro_formiga = std::numeric_limits<double>::max();
 
   for (int iteracao = 0; iteracao < numIteracoes; ++iteracao){
-    
+
     for (int k = 0; k < numFormigas; ++k){
 
       int posicaoAtual = Random::get(0, numVertices - 1);
@@ -324,14 +323,12 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
       double distanciaTotal = this->calcDistancia_Total(caminho);
       auto lucro_formiga = this->calcula_lucro(tempos, velocidades, mochila, caminho);
 
-      if (iteracao == 0 && k == 0)
-      {
+      if (iteracao == 0 && k == 0){
         custo_primeiro_caminho = distanciaTotal;
         lucro_primeiro_caminho = lucro_formiga;
         lucro_melhor_caminho = lucro_formiga;
       }
-      if (lucro_formiga > lucro_melhor_caminho)
-      {
+      if (lucro_formiga > lucro_melhor_caminho){
         // std::cout << "lucro da formiga " << lucro_formiga << std::endl;
         melhorDistancia = distanciaTotal;
         melhorCaminho = caminho;
@@ -352,13 +349,11 @@ std::vector<int> Grafo::ACO(int numIteracoes, int numFormigas, double taxaEvapor
     double menor_lucro = registro_geral_formigas_lucros[iteracao * numFormigas];
     double maior_lucro = registro_geral_formigas_lucros[iteracao * numFormigas];
     for (auto g = (iteracao * numFormigas) + 1; g < registro_geral_formigas_lucros.size(); ++g){
-      if (registro_geral_formigas_lucros[g] < menor_lucro)
-      {
+      if (registro_geral_formigas_lucros[g] < menor_lucro){
         menor_lucro = registro_geral_formigas_lucros[g];
         indice_menor_lucro = g;
       }
-      if (registro_geral_formigas_lucros[g] > maior_lucro)
-      {
+      if (registro_geral_formigas_lucros[g] > maior_lucro){
         maior_lucro = registro_geral_formigas_lucros[g];
         indice_maior_lucro = g;
       }
